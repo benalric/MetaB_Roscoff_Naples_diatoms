@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --job-name=A01_a.qsub                               # job name
+#SBATCH --mail-type=BEGIN,END                               # send a mail at the end of job
+#SBATCH --mail-user=balric@sb-roscoff.fr                    # where to send mail
+#SBATCH --cpus-per-task 1                                   # number of CPUs required per task
+#SBATCH --mem 4GB                                           # memory per processor
+#SBATCH --workdir=/shared/projects/marechiara/Astan_18SV4   # set working directory
+#SBATCH -p fast                                             # partition
+#SBATCH -o A01_a.out                                        # output file
+#SBATCH -e A01_a.err                                        # error file
+
+MANIFEST="manifest.txt"
+LOG="/shared/projects/marechiara/Astan_18SV4/log/primer_demutrim.log"
+echo -e 'sample\tstatus\tin_reads\tin_bp\ttoo_short\ttoo_long\ttoo_many_n\tout_reads\tw/adapters\tqualtrim_bp\tout_bp\tw/adapters2\tqualtrim2_bp\tout2_bp' > ${LOG}
+echo -n "" > A01_a.out
+echo -n "" > A01_a.err
+RUNID="ADNU_24"
+FORWARD="/shared/projects/marechiara/data/190605_SN1126_A_L001_ADNU-24_R1.fastq.gz"
+REVERSE="/shared/projects/marechiara/data/190605_SN1126_A_L001_ADNU-24_R2.fastq.gz"
+awk 'NR>1 {print $2,toupper($4)}' samples.list | \
+sed "s/\.//g" | \
+awk -v a=$RUNID -v b=$FORWARD -v c=$REVERSE '{print $0,a,b,c}' > $MANIFEST
+
+

@@ -1,0 +1,5 @@
+step;variable;value;comment
+step01;TRUNC_FWD;220;
+step01;TRUNC_REV;210;
+step01;MAXEE;2;
+step02;MIN_READ_NUM;1000;

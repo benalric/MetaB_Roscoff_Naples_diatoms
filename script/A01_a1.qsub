@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=A01_a1.qsub                              # job name
+#SBATCH --mail-type=BEGIN,END                               # send a mail at the end of job
+#SBATCH --mail-user=balric@sb-roscoff.fr                    # where to send mail
+#SBATCH --cpus-per-task 1                                   # number of CPUs required per task
+#SBATCH --mem 10GB                                          # memory per processor
+#SBATCH --workdir=/shared/projects/marechiara/Astan_18SV4   # set working directory
+#SBATCH -p fast                                             # partition
+#SBATCH -o A01_a1.out                                       # output file
+#SBATCH -e A01_a1.err                                       # error file
+
+RUNID="ADNU_24"
+sbatch --array=1-$(cat manifest.txt | wc -l)%50 script/A01_demultiplex_primer_trim.qsub # submit a large number of task jobs

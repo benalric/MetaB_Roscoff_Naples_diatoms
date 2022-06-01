@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH --job-name=dada2_06_AssignTaxo_pr2.qsub             # job name
+#SBATCH --mail-type=BEGIN,END                               # send a mail at the end of job
+#SBATCH --mail-user=balric@sb-roscoff.fr                    # where to send mail
+#SBATCH --cpus-per-task 6                                   # number of CPUs required per task
+#SBATCH --mem 200GB                                         # memory per processor
+#SBATCH --workdir=/shared/projects/marechiara/Astan_18SV4   # set working directory
+#SBATCH --partition long                                    # partition
+#SBATCH --time 2-00:00:00                                   # set the maximum time to 2 days rather than 30 days which is the default
+#SBATCH -o dada2_06_AssignTaxo_pr2.out                      # output file
+#SBATCH -e dada2_06_AssignTaxo_pr2.err                      # error file
+
+module load r/4.1.0
+srun Rscript /shared/projects/marechiara/Astan_18SV4/script/dada2_06_AssignTaxo_pr2.R

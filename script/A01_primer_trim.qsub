@@ -1,0 +1,33 @@
+#!/bin/bash
+#SBATCH --job-name=A01_primer_trim.qsub                           # job name
+#SBATCH --mail-type=BEGIN,END                                     # send a mail at the end of job
+#SBATCH --mail-user=balric@sb-roscoff.fr                          # where to send mail
+#SBATCH --cpus-per-task 1                                         # number of CPUs required per task
+#SBATCH --mem 10GB                                                # memory per processor
+#SBATCH --workdir=/shared/projects/marechiara/Marechiara_18SV4    # set working directory
+#SBATCH -p fast                                                   # partition
+#SBATCH -o A01_primer_trim.out                                    # output file
+#SBATCH -e A01_primer_trim.err                                    # error file
+
+module load cutadapt/2.8
+# Primers
+PRIMER_F="^CCAGCASCYGCGGTAATTCC"
+PRIMER_R="^ACTTTCGTTCTTGATYRA"
+# Manifest
+read SAMPLE TAG RUNID FORWARD REVERSE <<< $(awk "NR==$SLURM_ARRAY_TASK_ID" manifest.txt)
+# Primer trimmed files
+CUT_F1="FWD/${SAMPLE}_${RUNID}_Cut1_trimmed.fastq.gz"
+CUT_F2="FWD/${SAMPLE}_${RUNID}_Cut2_trimmed.fastq.gz"
+CUT_R1="REV/${SAMPLE}_${RUNID}_Cut1_trimmed.fastq.gz"
+CUT_R2="REV/${SAMPLE}_${RUNID}_Cut2_trimmed.fastq.gz"
+OUT_R1="output/${SAMPLE}_${RUNID}_R1.fastq.gz"
+OUT_R2="output/${SAMPLE}_${RUNID}_R2.fastq.gz"
+# Log file
+LOG="/shared/projects/marechiara/bioinfo/analysis/Marechiara_18SV4/log/${SAMPLE}_${RUNID}_primer_demutrim.log"
+TMP_LOG=$(mktemp --tmpdir="/shared/projects/marechiara/bioinfo/analysis/Marechiara_18SV4/scratch")
+# Primer trimming - R1
+cutadapt -g "${PRIMER_F}" -G "${PRIMER_R}" --report=minimal --discard-untrimmed --minimum-length 100 --no-indels -o ${CUT_F1} -p ${CUT_R1} ${FORWARD} ${REVERSE}  1> ${TMP_LOG}
+awk -v a="${SAMPLE}_${RUNID}_Cut1" 'BEGIN {OFS="\t"}; NR==2{print a,$0}' ${TMP_LOG} > ${LOG}
+# Primer trimming - R2
+cutadapt -g "${PRIMER_F}" -G "${PRIMER_R}" --report=minimal --discard-untrimmed --minimum-length 100 --no-indels -o ${CUT_F2} -p ${CUT_R2} ${REVERSE} ${FORWARD}  1> ${TMP_LOG}
+awk -v a="${SAMPLE}_${RUNID}_Cut2" 'BEGIN {OFS="\t"}; NR==2{print a,$0}' ${TMP_LOG}  >> ${LOG}

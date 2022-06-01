@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --job-name=A01_a.qsub                                     # job name
+#SBATCH --mail-type=BEGIN,END                                     # send a mail at the end of job
+#SBATCH --mail-user=balric@sb-roscoff.fr                          # where to send mail
+#SBATCH --cpus-per-task 1                                         # number of CPUs required per task
+#SBATCH --mem 4GB                                                 # memory per processor
+#SBATCH --workdir=/shared/projects/marechiara/Marechiara_18SV4    # set working directory
+#SBATCH -p fast                                                   # partition
+#SBATCH -o A01_a.out                                              # output file
+#SBATCH -e A01_a.err                                              # error file
+
+MANIFEST="manifest.txt"
+LOG="/shared/projects/marechiara/Marechiara_18SV4/log/primer_demutrim.log"
+echo -e 'sample\tstatus\tin_reads\tin_bp\ttoo_short\ttoo_long\ttoo_many_n\tout_reads\tw/adapters\tqualtrim_bp\tout_bp\tw/adapters2\tqualtrim2_bp\tout2_bp' > ${LOG}
+echo -n "" > A01_a.out
+echo -n "" > A01_a.err
+RUNID="MC"
+ls /shared/projects/marechiara/bioinfo/data/raw/marechiara/ | sort | \
+grep -E R[12]_001\.fastq\.gz | sed -E "s/_R[12].+$//" | uniq | \
+awk -v a="/shared/projects/marechiara/bioinfo/data/raw/marechiara/" -v b=$RUNID \
+'{print $1,"NOTAG",b,a$1"_R1_001.fastq.gz",a$S1"_R2_001.fastq.gz"}' | \
+awk '{sub(/\-18S-.+$/,"_18S",$1)}1' >> $MANIFEST

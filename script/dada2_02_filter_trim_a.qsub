@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=dad2_02_filter_trim_a.qsub               # job name
+#SBATCH --mail-type=BEGIN,END                               # send a mail at the begining/end of job
+#SBATCH --mail-user=balric@sb-roscoff.fr                    # where to send mail
+#SBATCH --cpus-per-task 4                                   # number of CPUs required per task
+#SBATCH --mem 10GB                                          # memory per processor
+#SBATCH --workdir=/shared/projects/marechiara/Astan_18SV4   # set working directory
+#SBATCH -p fast                                             # partition
+#SBATCH -o dada2_02_filter_trim_a.out                       # output file
+#SBATCH -e dada2_02_filter_trim_a.err                       # error file
+
+module load r/4.1.0
+srun Rscript /shared/projects/marechiara/Astan_18SV4/script/dada2_02_filter_trim_a.R
