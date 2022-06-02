@@ -27,7 +27,7 @@ library(DiagrammeR)
 ```
 
 # Aims
-In this repository, you will find a tutorial explaining how we processed metabarcoding data (18S V4 rDNA region) to report on the genetic diversity of diatom communities in two coastal sites with contrasting hydrological features but recurring annual sequences of plankton species: the SOMLIT-Astan and LTER-Marechiara stations, located respectively in Roscoff (France, Western English Channel) and Naples (Italy, Mediterranean Sea, Gulf of Naples).
+In this repository, you will find a tutorial explaining how we processed metabarcoding data (rDNA 18S V4 region) to report on the genetic diversity of diatom communities in two coastal sites with contrasting hydrological features but recurring annual sequences of plankton species: the SOMLIT-Astan and LTER-Marechiara stations, located respectively in Roscoff (France, Western English Channel) and Naples (Italy, Mediterranean Sea, Gulf of Naples).
 
 The objective was to generate tables of amplicon sequence variants (i.e. ASVs) to study the temporal dynamics of diatom communities at both sites.
 
@@ -185,7 +185,7 @@ cat ${TMP_TAG_R} >> ${OUT_R1}
 cutadapt -g "${PRIMER_F}" -G "${PRIMER_R}" --report=minimal --discard-untrimmed --minimum-length 100 --no-indels -o ${CUT_F2} -p ${CUT_R2} ${TMP_TAG_F} ${TMP_TAG_R}  1> ${TMP_LOG}
 awk -v a="${SAMPLE}_${RUNID}_Cut2" 'BEGIN {OFS="\t"}; NR==2{print a,$0}' ${TMP_LOG}  >> ${LOG}
 ```
-In this script, the primers need to be specified.<br/>Here, we used as gene marker, the 18S rDNA V4 region and the associated eukaryotic-specific primers developped by [Stoeck et al. (2010)](https://onlinelibrary.wiley.com/doi/10.1111/j.1365-294X.2009.04480.x):
+In this script, the primers need to be specified.<br/>Here, we used as gene marker, the rDNA 18S V4 region and the associated eukaryotic-specific primers developped by [Stoeck et al. (2010)](https://onlinelibrary.wiley.com/doi/10.1111/j.1365-294X.2009.04480.x):
 <br/>`PRIMER_F="^CCAGCASCYGCGGTAATTCC"` (TAReuk545FWD1, Saccharomyces cerevisiae position 565-584),
 <br/>`PRIMER_R="^ACTTTCGTTCTTGATYRA"` (TAReukRev3, Saccharomyces cerevisiae position 964-981).
 <br/>The forward reads are placed in the FWD/ folder, those extracted from the R1 file are named Cut1 and those extracted from the R2 file are named Cut2.
