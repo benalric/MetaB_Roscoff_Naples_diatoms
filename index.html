@@ -7,7 +7,7 @@
 
         <meta name="author" content="Benjamin Alric" />
     
-        <meta name="date" content="2022-06-01" />
+        <meta name="date" content="2022-06-02" />
     
     <title>DADA2 pipeline with MiSeq dataset (18S rDNA) for Roscoff and Naples time series</title>
 
@@ -4214,7 +4214,7 @@ for Roscoff and Naples time series</a></h2>
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
                   <p class="author"><span class="glyphicon glyphicon-user"></span> Benjamin
 Alric</p>
-                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2022-06-01</p>
+                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2022-06-02</p>
           </div>
    </div>
      
@@ -4227,7 +4227,7 @@ Alric</p>
 <div id="aims" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Aims</h1>
 <p>In this repository, you will find a tutorial explaining how we
-processed metabarcoding data (18S V4 rDNA region) to report on the
+processed metabarcoding data (rDNA 18S V4 region) to report on the
 genetic diversity of diatom communities in two coastal sites with
 contrasting hydrological features but recurring annual sequences of
 plankton species: the SOMLIT-Astan and LTER-Marechiara stations, located
@@ -4244,8 +4244,8 @@ implemented in <a href="https://benjjneb.github.io/dada2/dada-installation.html"
 bioinformatic pipeline</h1>
 <p>The pipeline is composed to three steps according to the following
 workflow.</p>
-<div id="htmlwidget-0bc3bec31498733be0a4" style="width:768px;height:600px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0bc3bec31498733be0a4">{"x":{"diagram":"\ngraph TD\nA(FastQ sequencing R1 and R2 files) --> B(Step 1 - Filtering and Trimming)\nB --> C(FWD and REV primer trimmed sequence for each sample)\nC --> D(Step 2 - DADA2: Filtration and length trimming, denoising and merging, chimera detection and ASV table construction)\nD --> E(Amplicon Sequence Variants)\nE --> F(Step 3 - Taxonomic assignment)\nstyle A fill:#d9e6eb,stroke:#333333,stroke-width:2px\nstyle B fill:#F0E442,stroke:#333333,stroke-width:2px\nstyle C fill:#d9e6eb,stroke:#333333,stroke-width:2px\nstyle D fill:#F0E442,stroke:#333333,stroke-width:2px\nstyle E fill:#d9e6eb,stroke:#333333,stroke-width:2px\nstyle F fill:#F0E442,stroke:#333333,stroke-width:2px\n"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-a6d9855a646f25ab353d" style="width:768px;height:600px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a6d9855a646f25ab353d">{"x":{"diagram":"\ngraph TD\nA(FastQ sequencing R1 and R2 files) --> B(Step 1 - Filtering and Trimming)\nB --> C(FWD and REV primer trimmed sequence for each sample)\nC --> D(Step 2 - DADA2: Filtration and length trimming, denoising and merging, chimera detection and ASV table construction)\nD --> E(Amplicon Sequence Variants)\nE --> F(Step 3 - Taxonomic assignment)\nstyle A fill:#d9e6eb,stroke:#333333,stroke-width:2px\nstyle B fill:#F0E442,stroke:#333333,stroke-width:2px\nstyle C fill:#d9e6eb,stroke:#333333,stroke-width:2px\nstyle D fill:#F0E442,stroke:#333333,stroke-width:2px\nstyle E fill:#d9e6eb,stroke:#333333,stroke-width:2px\nstyle F fill:#F0E442,stroke:#333333,stroke-width:2px\n"},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="step-1---filtering-and-trimming" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Step 1 - Filtering and
@@ -4470,7 +4470,7 @@ is applied to each sample (<code>$SLURM_ARRAY_TASK_ID</code>):</p>
 <span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="ex">cutadapt</span> <span class="at">-g</span> <span class="st">&quot;</span><span class="va">${PRIMER_F}</span><span class="st">&quot;</span> <span class="at">-G</span> <span class="st">&quot;</span><span class="va">${PRIMER_R}</span><span class="st">&quot;</span> <span class="at">--report</span><span class="op">=</span>minimal <span class="at">--discard-untrimmed</span> <span class="at">--minimum-length</span> 100 <span class="at">--no-indels</span> <span class="at">-o</span> <span class="va">${CUT_F2}</span> <span class="at">-p</span> <span class="va">${CUT_R2}</span> <span class="va">${TMP_TAG_F}</span> <span class="va">${TMP_TAG_R}</span>  <span class="dv">1</span><span class="op">&gt;</span> <span class="va">${TMP_LOG}</span></span>
 <span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="at">-v</span> a=<span class="st">&quot;</span><span class="va">${SAMPLE}</span><span class="st">_</span><span class="va">${RUNID}</span><span class="st">_Cut2&quot;</span> <span class="st">&#39;BEGIN {OFS=&quot;\t&quot;}; NR==2{print a,$0}&#39;</span> <span class="va">${TMP_LOG}</span>  <span class="op">&gt;&gt;</span> <span class="va">${LOG}</span></span></code></pre></div>
 <p>In this script, the primers need to be specified.<br />Here, we used
-as gene marker, the 18S rDNA V4 region and the associated
+as gene marker, the rDNA 18S V4 region and the associated
 eukaryotic-specific primers developped by <a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1365-294X.2009.04480.x">Stoeck
 et al. (2010)</a>: <br /><code>PRIMER_F=&quot;^CCAGCASCYGCGGTAATTCC&quot;</code>
 (TAReuk545FWD1, Saccharomyces cerevisiae position 565-584),
@@ -5271,7 +5271,7 @@ loaded via a namespace (and not attached):
 [57] RCurl_1.98-1.6              rstudioapi_0.13            
 [59] htmlwidgets_1.5.4           visNetwork_2.1.0           
 [61] bitops_1.0-7                rmarkdown_2.13             
-[63] codetools_0.2-18            gtable_0.3.0               
+[63] gtable_0.3.0                codetools_0.2-18           
 [65] DBI_1.1.2                   reshape2_1.4.4             
 [67] R6_2.5.1                    GenomicAlignments_1.30.0   
 [69] knitr_1.38                  dplyr_1.0.8                
